@@ -1,0 +1,28 @@
+
+
+BINARYID = 0
+IDLENGTH = LEN(ID)
+
+=====================================
+For statement
+=====================================
+
+FOR A = 1 TO VALUE
+  B = A + 1
+NEXT A
+
+---
+
+(compilation_unit
+  (class_declaration
+    (identifier_name)
+    (class_body (method_declaration
+      (predefined_type)
+      (identifier_name)
+      (parameter_list)
+      (statement_block
+        (return_statement (integer_literal)))))))
+
+
+
+
