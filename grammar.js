@@ -1,5 +1,31 @@
+const PREC = {
+  call: 14,
+  field: 13,
+  unary: 11,
+  multiplicative: 10,
+  additive: 9,
+  shift: 8,
+  bitand: 7,
+  bitxor: 6,
+  bitor: 5,
+  comparative: 4,
+  and: 3,
+  or: 2,
+  range: 1,
+  assign: 0,
+  closure: -1,
+}
+
 module.exports = grammar({
-  name: 'the_language_name',
+  name: 'mvbasic',
+
+  // externals: $ => [
+  //   $._line_break,
+
+  //   // Delimited literals
+  //   $._string_start,
+  //   $._string_content,
+  // ],
 
   rules: {
     // The production rules of the context-free grammar
@@ -9,13 +35,14 @@ module.exports = grammar({
     _newline: $ => /\\n/,
 
     _definition: $ => choice(
-      $._for,
       $._statement,
     ),
 
     _statement: $ => choice(
       $.declaration,
-      // TODO: other kinds of statements
+      $.for_loop,
+      $.if_statement,
+      $._expression,
     ),
 
     declaration: $ => seq(
@@ -28,15 +55,76 @@ module.exports = grammar({
       // $._newline,
     ),
 
-    _for: $ => seq(
+    _expression: $ => choice(
+      $.identifier,
+      $.string,
+      $.number,
+      $.bool,
+      $.unary_expression,
+      $.binary_expression,
+    ),
+
+    identifier: $ => /[A-Z]+/,
+
+    number: $ => /\d+/,
+
+    bool: $ => choice($._true, $._false),
+    _true: $ => token('TRUE'),
+    _false: $ => token('FALSE'),
+
+    string: $ => choice(
+      seq('"', repeat(choice(/[^"\n]/, /\\(.|\n)/)), '"'),
+      seq(`'`, repeat(choice(/[^'\n]/, /\\(.|\n)/)), `'`),
+      seq(`\\`, repeat(choice(/[^\\\n]/, /(.|\n)/)), `\\`),
+      // seq(`'`, optional($._string_content), `'`),
+      // seq(`"`, optional($._string_content), `"`),
+      // seq(`\\`, optional($._string_content), `\\`),
+    ),
+
+    unary_expression: $ => prec(PREC.unary, seq(
+      choice('+', '-', 'NOT', 'ALPHA', 'NUM'),
+      $._expression
+    )),
+
+    binary_expression: $ => choice(
+      prec.left(PREC.multiplicative, seq($._expression, choice('*', '/', '%'), $._expression)),
+      prec.left(PREC.additive, seq($._expression, choice('+', '-'), $._expression)),
+      prec.left(PREC.additive, seq($._expression, choice(':', 'CAT'), $._expression)),
+      prec.left(PREC.comparative, seq($._expression, 
+        choice(
+          '==', 'EQ', //need to correct == to =, is a parse issue
+          '#', 'NE', 
+          '><', '<>', 
+          '<', 'LT', 
+          '>', 'GT', 
+          '<=', '=<', 'LE', 
+          '>=', '=>', '#<', 'GE'), $._expression)),
+      // prec.left(PREC.shift, seq($._expression, choice('<<', '>>'), $._expression)),
+      prec.left(PREC.and, seq($._expression, choice('AND', '&'), $._expression)),
+      prec.left(PREC.or, seq($._expression, choice('OR', '|'), $._expression)),
+      // prec.left(PREC.bitor, seq($._expression, '|', $._expression)),
+      // prec.left(PREC.bitand, seq($._expression, '&', $._expression)),
+      // prec.left(PREC.bitxor, seq($._expression, '^', $._expression)),
+      // $.assignment_expression,
+      // $.compound_assignment_expr,
+      // $.type_cast_expression
+    ),
+
+
+
+    for_loop: $ => seq(
       'FOR',
-      $._expression,
+      $.declaration,
       'TO',
       $.identifier,
-      $._newline,
+      // [STEP increment]
+      // $._newline,
       repeat($._statement),
+      // $.declaration,
+      // $._newline,
       'NEXT',
-      $.identifier,
+      // $._newline,
+      // optional($.identifier),
     ),
 
     method_call: $ => seq(
@@ -53,126 +141,30 @@ module.exports = grammar({
     // ),
 
 
-    _expression: $ => choice(
-      $.identifier,
-      $.number,
-      $.bool,
-
-      
+    if_statement: $ => seq (
+      'IF',
+      $._expression,
+      optional(
+        $.then_statement,
+      ),
+      optional(
+        $.else_statement,
+      ),
+      'END'
     ),
 
-    identifier: $ => /[A-Z]+/,
-
-    number: $ => /\d+/,
-
-    bool: $ => choice($._true, $._false),
-    _true: $ => token('TRUE'),
-    _false: $ => token('FALSE'),
-
-
-    _expression: $ => choice(
-      // $.comparison_operator,
-      // $.not_operator,
-      $.boolean_operator,
-      // $.await,
-      // $.lambda,
-      $._primary_expression,
-      // $.conditional_expression,
-      // $.named_expression
+    then_statement: $ => seq(
+      'THEN',
+      repeat($._statement),
     ),
 
-    _primary_expression: $ => choice(
-      $.binary_operator,
-      // $.identifier,
-      // $.keyword_identifier,
-      // $.string,
-      // $.concatenated_string,
-      // $.integer,
-      // $.float,
-      // $.true,
-      // $.false,
-      // $.none,
-      // $.unary_operator,
-      // $.attribute,
-      // $.subscript,
-      // $.call,
-      // $.list,
-      // $.list_comprehension,
-      // $.dictionary,
-      // $.dictionary_comprehension,
-      // $.set,
-      // $.set_comprehension,
-      // $.tuple,
-      // $.parenthesized_expression,
-      // $.generator_expression,
-      // $.ellipsis
+    else_statement: $ => seq(
+      'ELSE',
+      repeat($._statement),
     ),
+    
 
-
-
-
-
-
-
-
-
-    // function_definition: $ => seq(
-    //   'func',
-    //   $.identifier,
-    //   $.parameter_list,
-    //   $._type,
-    //   $.block
-    // ),
-
-    // parameter_list: $ => seq(
-    //   '(',
-    //   optional(
-    //     $.identifier
-    //   ),
-    //   optional(
-    //     repeat(
-    //       seq(
-    //         ',',
-    //         $.identifier,
-    //       )
-    //     ),
-    //   ),
-    //   optional(','),
-    //   ')'
-    // ),
-
-    // _type: $ => choice(
-    //   'bool'
-    //   // TODO: other kinds of types
-    // ),
-
-    // block: $ => seq(
-    //   '{',
-    //   repeat($._statement),
-    //   '}'
-    // ),
-
-
-    // if_statement: $ => seq (
-    //   'if',
-    //   $._expression,
-    //   $.block,
-    //   optional(
-    //     $.else_statement,
-    //   )
-    // ),
-
-    // else_statement: $ => seq(
-    //   'else',
-    //   $.block,
-    // ),
-
-    // return_statement: $ => seq(
-    //   'return',
-    //   $._expression,
-    //   ';'
-    // ),
-
+    
 
   }
 });

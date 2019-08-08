@@ -7,4 +7,6 @@ IDLENGTH = LEN(ID)
 
 ---
 
-
+(source_file 
+  (declaration (identifier) (number)) 
+  (declaration (identifier) (method_call (identifier) (identifier))))

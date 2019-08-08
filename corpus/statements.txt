@@ -1,28 +1,58 @@
+=====================================
+Assignment statement
+=====================================
 
+NUMBER = 7
+NUMBER = NUMBER + 2
 
-BINARYID = 0
-IDLENGTH = LEN(ID)
+---
+
+(source_file
+    (declaration (identifier) (number))
+    (declaration (identifier) (binary_expression (identifier) (number))))
 
 =====================================
 For statement
 =====================================
 
-FOR A = 1 TO VALUE
-  B = A + 1
-NEXT A
+FOR AA = 0 TO LAST
+  VALUE = AA
+NEXT
 
 ---
 
-(compilation_unit
-  (class_declaration
-    (identifier_name)
-    (class_body (method_declaration
-      (predefined_type)
-      (identifier_name)
-      (parameter_list)
-      (statement_block
-        (return_statement (integer_literal)))))))
+(source_file
+  (for_loop
+    (declaration (identifier) (number)) (identifier)
+    (declaration (identifier) (identifier))))
 
+=====================================
+If statement
+=====================================
 
+IF TRUE THEN
+  VALUE = B
+END
 
+---
 
+(source_file
+  (if_statement (bool)
+    (then_statement (declaration (identifier) (identifier)))))
+
+=====================================
+If Else statement
+=====================================
+
+IF TRUE THEN
+  VALUE = B
+ELSE
+  VALUE = A
+END
+
+---
+
+(source_file
+  (if_statement (bool)
+    (then_statement (declaration (identifier) (identifier)))
+    (else_statement (declaration (identifier) (identifier)))))

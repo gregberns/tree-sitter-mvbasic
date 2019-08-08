@@ -1,0 +1,103 @@
+=====================================
+Unary Expressions
+=====================================
+
+AB = +A
+AB = -A
+AB = NOT A
+AB = ALPHA A
+AB = NUM A
+
+---
+
+(source_file
+  (declaration (identifier) (unary_expression (identifier)))
+  (declaration (identifier) (unary_expression (identifier)))
+  (declaration (identifier) (unary_expression (identifier)))
+  (declaration (identifier) (unary_expression (identifier)))
+  (declaration (identifier) (unary_expression (identifier))))
+
+=====================================
+Binary Expressions
+=====================================
+
+A * B
+A / B
+A % B
+A + B
+A - B
+A == B
+A EQ B
+A # B
+A NE B
+A >< B
+A <> B
+A < B
+A LT B
+A > B
+A GT B
+A <= B
+A =< B
+A LE B
+A >= B
+A => B
+A #< B
+A GE B
+A & B
+A AND B
+A | B
+A OR B
+
+---
+
+(source_file
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier))
+  (binary_expression (identifier) (identifier)))
+
+=====================================
+String Expressions
+=====================================
+
+A = "EMILY DANIELS"
+A = '$42,368.99'
+A = 'NUMBER OF EMPLOYEES'
+A = "34 CAIRO LANE"
+A = \"FRED'S PLACE" ISN'T OPEN\
+A = "B" : "C"
+A = B CAT ", " CAT C
+
+---
+
+(source_file
+  (declaration (identifier) (string))
+  (declaration (identifier) (string))
+  (declaration (identifier) (string))
+  (declaration (identifier) (string))
+  (declaration (identifier) (string))
+  (declaration (identifier) (binary_expression (string) (string)))
+  (declaration (identifier) (binary_expression (binary_expression (identifier) (string)) (identifier)))
+  )
