@@ -1,0 +1,17 @@
+=====================================
+integers
+=====================================
+
+A = 1
+A = +1
+A = -1
+A = 1234567890123456789
+
+---
+
+(source_file
+  (declaration (identifier) (integer))
+  (declaration (identifier) (unary_expression (integer)))
+  (declaration (identifier) (unary_expression (integer)))
+  (declaration (identifier) (integer))
+  )

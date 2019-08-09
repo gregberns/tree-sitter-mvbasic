@@ -2,11 +2,11 @@
 Unary Expressions
 =====================================
 
-AB = +A
-AB = -A
-AB = NOT A
-AB = ALPHA A
-AB = NUM A
+A = +B
+A = -B
+A = NOT B
+A = ALPHA B
+A = NUM B
 
 ---
 
@@ -99,5 +99,16 @@ A = B CAT ", " CAT C
   (declaration (identifier) (string))
   (declaration (identifier) (string))
   (declaration (identifier) (binary_expression (string) (string)))
-  (declaration (identifier) (binary_expression (binary_expression (identifier) (string)) (identifier)))
+  (declaration (identifier) (binary_expression (binary_expression (identifier) (string)) (identifier))))
+
+=====================================
+Method Call expression
+=====================================
+
+NUMBER = SQRT(NUMBER + 1)
+
+---
+
+(source_file
+  (declaration (identifier) (method_call (identifier) (parameter_list (parameter (binary_expression (identifier) (integer))))))
   )

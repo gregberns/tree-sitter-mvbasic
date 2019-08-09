@@ -8,5 +8,21 @@ IDLENGTH = LEN(ID)
 ---
 
 (source_file 
-  (declaration (identifier) (number)) 
-  (declaration (identifier) (method_call (identifier) (identifier))))
+  (declaration (identifier) (integer)) 
+  (declaration (identifier) (method_call (identifier) (parameter_list (parameter (identifier))))))
+
+=====================================
+Identifiers
+=====================================
+
+ABC
+ABC.DEF
+ABC.DEF.HIG
+
+---
+
+(source_file 
+  (identifier)
+  (identifier)
+  (identifier))
+

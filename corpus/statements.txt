@@ -8,14 +8,46 @@ NUMBER = NUMBER + 2
 ---
 
 (source_file
-    (declaration (identifier) (number))
-    (declaration (identifier) (binary_expression (identifier) (number))))
+    (declaration (identifier) (integer))
+    (declaration (identifier) (binary_expression (identifier) (integer))))
+
+=====================================
+Multiple statements per line
+=====================================
+
+A='' ; B='1' ; C=0
+D="A" ; E=1
+
+---
+
+(source_file
+  (declaration (identifier) (string))
+  (declaration (identifier) (string))
+  (declaration (identifier) (integer))
+  (declaration (identifier) (string))
+  (declaration (identifier) (integer)))
+
+=====================================
+Method Call statement
+=====================================
+
+A = METH()
+A = METH(A)
+A = METH(A, B)
+
+---
+
+(source_file
+  (declaration (identifier) (method_call (identifier) (parameter_list)))
+  (declaration (identifier) (method_call (identifier) (parameter_list (parameter (identifier)) )))
+  (declaration (identifier) (method_call (identifier) (parameter_list (parameter (identifier)) (parameter (identifier)) )))
+  )
 
 =====================================
 For statement
 =====================================
 
-FOR AA = 0 TO LAST
+FOR AA = 0 TO LAST STEP 1
   VALUE = AA
 NEXT
 
@@ -23,7 +55,7 @@ NEXT
 
 (source_file
   (for_loop
-    (declaration (identifier) (number)) (identifier)
+    (declaration (identifier) (integer)) (identifier) (integer)
     (declaration (identifier) (identifier))))
 
 =====================================
@@ -56,3 +88,174 @@ END
   (if_statement (bool)
     (then_statement (declaration (identifier) (identifier)))
     (else_statement (declaration (identifier) (identifier)))))
+
+=====================================
+If Else statement, expression in if clause
+=====================================
+
+IF NET >= 0 THEN 
+  PRINT "PROFIT IS ": 
+ELSE 
+  PRINT "LOSS IS ": 
+  PRINT ABS(NET)
+END
+
+---
+
+(source_file
+  (if_statement (binary_expression (identifier) (integer))
+    (then_statement (print_statement (string)))
+    (else_statement 
+      (print_statement (string)) 
+      (print_statement (method_call (identifier) (parameter_list (parameter (identifier))))))))
+
+
+=====================================
+Empty Loop Statement
+=====================================
+
+LOOP
+REPEAT
+
+---
+
+(source_file
+  (loop_statement))
+
+=====================================
+Loop Statement with body
+=====================================
+
+LOOP
+  PRINT "A"
+  PRINT "B"
+  CONTINUE
+  WHILE 1 EQ 1
+  PRINT "C"
+  PRINT "D"
+  CONTINUE
+REPEAT
+
+---
+
+(source_file
+  (loop_statement
+    (print_statement (string))
+    (print_statement (string))
+    (continue_statement)
+    (while_statement (binary_expression (integer) (integer)))
+    (print_statement (string))
+    (print_statement (string))
+    (continue_statement)
+  ))
+
+=====================================
+Print Statement
+=====================================
+
+PRINT "ENTER A NUMBER"
+PRINT "ENTER A NUMBER":
+
+---
+
+(source_file
+  (print_statement (string))
+  (print_statement (string)))
+
+=====================================
+Input Statement
+=====================================
+
+INPUT VARIABLE
+
+---
+
+(source_file
+  (input_statement (identifier)))
+
+=====================================
+Call Statement
+=====================================
+
+CALL ADDEMUP(A, B)
+
+---
+
+(source_file
+  (call_statement (method_call (identifier) (parameter_list (parameter (identifier)) (parameter (identifier))))))
+
+=====================================
+GOTO Statement
+=====================================
+
+GOTO STMTNAME:
+
+---
+
+(source_file
+  (goto_statement (identifier)))
+
+=====================================
+CASE Statement
+=====================================
+
+BEGIN CASE
+  CASE 1 EQ 1
+    PRINT 'A'
+  CASE 2 EQ 2
+    PRINT 'B'
+END CASE
+
+---
+
+(source_file
+  (case_statement 
+    (case_case (binary_expression (integer) (integer)) (print_statement (string)))
+    (case_case (binary_expression (integer) (integer)) (print_statement (string)))
+  ))
+
+=====================================
+STOP Statement
+=====================================
+
+STOP 123
+
+---
+
+(source_file
+  (stop_statement (integer)))
+
+=====================================
+OPEN Statement
+=====================================
+
+OPEN 'SOMEFILE' TO FILELIST ELSE STOP 201, "SOMEFILE"
+
+---
+
+(source_file
+  (open_statement (string) (identifier) (stop_statement (integer)) (string)))
+
+=====================================
+DIM Statement
+=====================================
+
+DIM ABC(20)
+
+---
+
+(source_file
+  (dim_statement (identifier) (integer)))
+
+=====================================
+CONVERT Statement
+=====================================
+
+CONVERT ',' TO VM IN NAME.SUFFIX
+CONVERT(',', VM, NAME.SUFFIX)
+
+---
+
+(source_file
+  (convert_statement (string) (identifier) (identifier))
+  (convert_statement (string) (identifier) (identifier)))
